@@ -13,6 +13,8 @@ use yii\helpers\ArrayHelper;
 class ProductSearch extends Products
 {
     public $category_list;
+    public $min_price;
+    public $max_price;
 
     /**
      * {@inheritdoc}
@@ -21,7 +23,7 @@ class ProductSearch extends Products
     {
         return [
             //[['id', 'store_id'], 'integer'],
-            [['store_id', 'category', 'date_inserted', 'date_removed', 'product_name', 'product_sku', 'product_model_number', 'product_description', 'product_url', 'product_image', 'variant_name', 'category_list'], 'safe'],
+            [['store_id', 'category', 'date_inserted', 'date_removed', 'product_name', 'product_sku', 'product_model_number', 'product_description', 'product_url', 'product_image', 'variant_name', 'category_list', 'min_price', 'max_price'], 'safe'],
         ];
     }
 
@@ -45,16 +47,15 @@ class ProductSearch extends Products
     {
         $query = Products::find();
 
-        /*$query->innerJoin('prices', 'prices.product = products.id');*/
+        $query->innerJoin('prices', 'prices.product = products.id');
         $query->select(['products.id','products.product_name', 'products.product_url', 'products.product_image']);
-
+        $query->orderBy(['prices.sale_price' => SORT_ASC]);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
 
         $this->load($params);
-
 
 
 
@@ -78,6 +79,15 @@ class ProductSearch extends Products
         //check for store id select
         if(is_array($this->store_id) && array_sum($this->store_id) > 0){
             $query->andWhere(['IN', 'store_id', $this->store_id]);
+        }
+
+        //conditions for mix max price
+        if(!empty($this->min_price)){
+            $query->andWhere(['>=', 'prices.sale_price',  $this->min_price]);
+        }
+
+        if(!empty($this->max_price)){
+            $query->andWhere(['<=', 'prices.sale_price',  $this->max_price]);
         }
 
 

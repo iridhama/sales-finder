@@ -38,6 +38,26 @@ $this->registerJs('ProductController.createUpdate();');
 
             <hr>
 
+
+            <div class="col-md-12">
+                <div class="col-md-5">
+                    <?= $form->field($searchModel, "min_price")->textInput([
+                        'class' => 'min-price, form-control'
+                    ])->label('max price') ?>
+                </div>
+                <div class="col-md-5">
+                    <?= $form->field($searchModel, "max_price")->textInput([
+                        'class' => 'max-price, form-control'
+                    ])->label('max price') ?>
+                </div>
+                <div class="col-md-2">
+                    <?= \yii\helpers\Html::submitButton(Yii::t('app', 'Go'), ['class' => 'btn btn-success']) ?>
+                </div>
+            </div>
+
+            <hr>
+
+
             <h3>Stores list</h3>
             <?php if(!empty($storeModels)): ?>
                 <?php foreach ($storeModels as $storeModel): ?>
