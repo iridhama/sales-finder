@@ -17,7 +17,7 @@ class Products extends BaseProducts {
     }
 
     public static function getProductCategory($storeList){
-
+        
         $query = self::find();
         $query->select(['category', 'count(*) as count']);
         $query->groupBy('category');
@@ -30,6 +30,7 @@ class Products extends BaseProducts {
         }
 
         $query->asArray();
+
         return $query->all();
     }
 }

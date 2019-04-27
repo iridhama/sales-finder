@@ -2,12 +2,13 @@
 
 namespace app\controllers;
 
-use app\models\Stores;
 use Yii;
 use app\models\Products;
 use app\models\search\ProductSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
+use app\models\Stores;
+use yii\helpers\ArrayHelper;
 use yii\filters\VerbFilter;
 
 /**
@@ -39,14 +40,16 @@ class ProductsController extends Controller
         $searchModel = new ProductSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-        $categoryList = Products::getProductCategory($searchModel->store_id);
+       /* $categoryList = Products::getProductCategory($searchModel->store_id);
+        $searchModel->category_list = ArrayHelper::getColumn($categoryList, 'category');*/
+
         $storeModels = Stores::find()->select(['id', 'store_name'])->asArray()->all();
 
         return $this->render('index', [
             'searchModel' => $searchModel,
             'listDataProvider' => $dataProvider,
             'storeModels' => $storeModels,
-            'categoryList' => $categoryList
+            'categoryList' => $searchModel->category_list
         ]);
     }
 
