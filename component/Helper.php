@@ -21,4 +21,16 @@ class Helper
         }
         return $retArr;
     }
+
+    public static function getDiscountPercent($salePrice, $normalPrice){
+        if($salePrice > $normalPrice){
+            $diff = $salePrice - $normalPrice;
+        }else{
+            $diff = $normalPrice - $salePrice;
+        }
+
+        $dis = (($diff)*100)/$normalPrice;
+
+        return number_format($dis);
+    }
 }

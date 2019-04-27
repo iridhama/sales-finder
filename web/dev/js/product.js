@@ -12,6 +12,7 @@ ProductController.CreateUpdate = (function ($) {
         initJs();
         chkboxFormSubmit();
         categoryFormSubmit();
+        getRangeSliderValue()
 
     };
     
@@ -19,6 +20,12 @@ ProductController.CreateUpdate = (function ($) {
         console.log('i am loaded');
     };
 
+    var getRangeSliderValue = function(){
+        $(document).on('change','.discount-range', function(){
+            $('#discount-span').text($(this).val());
+            $('#product-search-form').submit();
+        })
+    }
     var categoryFormSubmit = function(){
         $(document).on('click','.category-list', function(){
             var elem = $(this);

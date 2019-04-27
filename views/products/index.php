@@ -37,8 +37,6 @@ $this->registerJs('ProductController.createUpdate();');
             <?=  $form->field($searchModel, 'category')->hiddenInput()?>
 
             <hr>
-
-
             <div class="col-md-12">
                 <div class="col-md-5">
                     <?= $form->field($searchModel, "min_price")->textInput([
@@ -55,6 +53,11 @@ $this->registerJs('ProductController.createUpdate();');
                 </div>
             </div>
 
+            <hr>
+
+
+            <label> discount: <span id="discount-span"><?= $searchModel->discount ?></span>%</label>
+            <input value="<?= $searchModel->discount ?>" class="discount-range" type="range" name="ProductSearch[discount]" min="0" max="100" step="10">
             <hr>
 
 
