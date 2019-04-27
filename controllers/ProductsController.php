@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\Stores;
 use Yii;
 use app\models\Products;
 use app\models\search\ProductSearch;
@@ -38,9 +39,14 @@ class ProductsController extends Controller
         $searchModel = new ProductSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
+        $categoryList = Products::getProductCategory($searchModel->store_id);
+        $storeModels = Stores::find()->select(['id', 'store_name'])->asArray()->all();
+
         return $this->render('index', [
             'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
+            'listDataProvider' => $dataProvider,
+            'storeModels' => $storeModels,
+            'categoryList' => $categoryList
         ]);
     }
 

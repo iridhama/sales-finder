@@ -1,49 +1,81 @@
 <?php
 
-use yii\helpers\Html;
-use yii\grid\GridView;
-use yii\widgets\Pjax;
-/* @var $this yii\web\View */
-/* @var $searchModel app\models\search\ProductSearch */
-/* @var $dataProvider yii\data\ActiveDataProvider */
+use yii\widgets\ActiveForm;
+use \app\component\Helper;
+use \yii\widgets\ListView;
 
 $this->title = Yii::t('app', 'Products');
 $this->params['breadcrumbs'][] = $this->title;
+
+$this->registerJs('ProductController.createUpdate();');
+
 ?>
+
 <div class="products-index">
-
-    <h1><?= Html::encode($this->title) ?></h1>
-
-    <p>
-        <?= Html::a(Yii::t('app', 'Create Products'), ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
-
-    <?php Pjax::begin(); ?>
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-
-    <?= GridView::widget([
-        'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
-        'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-
-            'id',
-            'category',
-            'store_id',
-            'date_inserted',
-            'date_removed',
-            //'product_name',
-            //'product_sku',
-            //'product_model_number',
-            //'product_description:ntext',
-            //'product_url:url',
-            //'product_image',
-            //'variant_name',
-
-            ['class' => 'yii\grid\ActionColumn'],
+    <?php $form = ActiveForm::begin([
+        'action' => ['index'],
+        'id' => 'product-search-form',
+        'method' => 'get',
+        'options' => [
+            'data-pjax' => 1
         ],
     ]); ?>
+    <div class="row">
+        <div class="col-md-3">
+            
+            <h3>Category List</h3>            
+            <?php if(!empty($categoryList)): ?>
+                <?php foreach ($categoryList as $item): ?>
+                    <div class="col-md-12">
+                        <a href="javascript:void(0)" class="category-list">
+                            <?= $item['category'] ?>
+                        </a>(<?= $item['count']?>)
+                    </div>
+                <?php endforeach; ?>
+            <?php endif ?>
+            <!-- hidden field to store the category -->
+            <?=  $form->field($searchModel, 'category')->hiddenInput()?>
 
-    <?php Pjax::end(); ?>
+            <hr>
 
+            <h3>Stores list</h3>
+            <?php if(!empty($storeModels)): ?>
+                <?php foreach ($storeModels as $storeModel): ?>
+                    <div class="col-md-12">
+
+                        <a href="" class="store-list">
+                            <?php $storeId =  $storeModel['id'] ?>
+                            <?= $form->field($searchModel, "store_id[$storeId]")->checkbox([
+                                    'value' => $storeId,
+                                    'class' => 'store-chkbox'
+                            ])->label(false) ?>
+                            <?= $storeModel['store_name'] ?>
+
+                        </a>
+                    </div>
+                <?php endforeach; ?>
+            <?php endif ?>
+        </div>
+
+
+        <div class="col-md-9">
+            <?=
+            ListView::widget([
+                'dataProvider' => $listDataProvider,
+                'options' => [
+                 //   'tag' => 'div',
+                    'class' => 'list-wrapper',
+                    'id' => 'list-wrapper',
+                ],
+                'itemOptions' => [
+                    'tag' => false,
+                ],
+                'summary' => false,
+                //'layout' => "{pager}\n{items}\n{summary}",
+                'itemView' => 'partials/_list-item',
+            ]);
+            ?>
+        </div>
+    </div>
+    <?php ActiveForm::end(); ?>
 </div>
