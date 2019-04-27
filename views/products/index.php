@@ -59,6 +59,22 @@ $this->registerJs('ProductController.createUpdate();');
 
 
         <div class="col-md-9">
+            <div class="row">
+                <div class="col-md-12" style="float: right; text-align: right">
+                    <div class="col-md-6">
+                        <?= $form->field($searchModel, "product_name")->textInput([
+                            'class' => 'product-search, form-control'
+                        ])->label(false) ?>
+                    </div>
+                    <div class="col-md-2">
+                        <?= \yii\helpers\Html::submitButton(Yii::t('app', 'Search'), ['class' => 'btn btn-success']) ?>
+                    </div>
+                </div>
+            </div>
+
+
+
+
             <?=
             ListView::widget([
                 'dataProvider' => $listDataProvider,
