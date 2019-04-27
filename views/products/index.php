@@ -57,7 +57,7 @@ $this->registerJs('ProductController.createUpdate();');
 
 
             <label> discount: <span id="discount-span"><?= $searchModel->discount ?></span>%</label>
-            <input value="<?= $searchModel->discount ?>" class="discount-range" type="range" name="ProductSearch[discount]" min="0" max="100" step="10">
+            <input value="<?= (isset($searchModel->discount) && !empty($searchModel->discount))? $searchModel->discount : 0 ?>" class="discount-range" type="range" name="ProductSearch[discount]" min="0" max="100" step="10">
             <hr>
 
 

@@ -48,13 +48,11 @@ class ProductSearch extends Products
     {
         $query = Products::find();
 
-        //only when min and max price are involved
-//        if(!empty($this->min_price) || !empty($this->max_price)){
-            $query->innerJoin('prices', 'prices.product = products.id');
- //       }
+        //only when min and max price and discount is involved
 
-        $query->select(['products.id','products.product_name', 'products.product_url', 'products.product_image']);
-      //  $query->orderBy(['prices.sale_price' => SORT_ASC]);
+        $query->innerJoin('prices', 'prices.product = products.id');
+        $query->select(['products.id','products.product_name', 'products.product_url', 'products.product_image', 'ROUND((prices.normal_price - prices.sale_price ) / prices.normal_price * 100, 0) AS discount']);
+        
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -78,7 +76,7 @@ class ProductSearch extends Products
             $query->where(['category' => trim($this->category)]);
         }else{
             $categoryList = ArrayHelper::getColumn($this->category_list, 'category');
-            $query->where(['IN', 'category', $categoryList]);
+            $query->where(['IN', 'products.category', $categoryList]);
         }
 
         //check for store id select
@@ -95,7 +93,12 @@ class ProductSearch extends Products
             $query->andWhere(['<=', 'prices.sale_price',  $this->max_price]);
         }
 
-        $query->andFilterWhere(['like', 'product_name', $this->product_name]);
+        if(!empty($this->discount)){
+            //ROUND((normal_price - sale_price ) / normal_price * 100, 0) AS discount FROM prices
+            $query->andWhere("'discount' >= '$this->discount'");
+        }
+
+        $query->andFilterWhere(['like', 'products.product_name', $this->product_name]);
 
         return $dataProvider;
     }

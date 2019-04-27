@@ -25,11 +25,13 @@ class Helper
     public static function getDiscountPercent($salePrice, $normalPrice){
         if($salePrice > $normalPrice){
             $diff = $salePrice - $normalPrice;
+            $dis = (($diff)*100)/$salePrice;
         }else{
             $diff = $normalPrice - $salePrice;
+            $dis = (($diff)*100)/$normalPrice;
         }
 
-        $dis = (($diff)*100)/$normalPrice;
+
 
         return number_format($dis);
     }
