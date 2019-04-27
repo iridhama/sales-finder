@@ -45,6 +45,9 @@ class ProductSearch extends Products
     {
         $query = Products::find();
 
+        /*$query->innerJoin('prices', 'prices.product = products.id');*/
+       // $query->select(['products.id','products.product_name', 'products.product_url', 'products.product_image', 'prices.normal_price', 'prices.sale_price']);
+
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
@@ -52,6 +55,8 @@ class ProductSearch extends Products
         ]);
 
         $this->load($params);
+
+        //join prices table for price
 
 
         //set the category list
@@ -63,13 +68,13 @@ class ProductSearch extends Products
             return $dataProvider;
         }
 
-        // grid filtering conditions
+      /*  // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
             'store_id' => $this->store_id,
             'date_inserted' => $this->date_inserted,
             'date_removed' => $this->date_removed,
-        ]);
+        ]);*/
 
         //when no category is selected
         if(!empty($this->category)){
@@ -78,6 +83,7 @@ class ProductSearch extends Products
             $categoryList = ArrayHelper::getColumn($this->category_list, 'category');
             $query->where(['IN', 'category', $categoryList]);
         }
+
         //check for store id select
         if(is_array($this->store_id) && array_sum($this->store_id) > 0){
             $query->andWhere(['IN', 'store_id', $this->store_id]);
@@ -92,8 +98,6 @@ class ProductSearch extends Products
             ->andFilterWhere(['like', 'product_url', $this->product_url])
             ->andFilterWhere(['like', 'product_image', $this->product_image])
             ->andFilterWhere(['like', 'variant_name', $this->variant_name]);*/
-
-
 
         return $dataProvider;
     }
